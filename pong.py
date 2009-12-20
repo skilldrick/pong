@@ -1,7 +1,8 @@
+import unittest
 import Tkinter
 
 class MainWindow:
-    def __init__(self):
+    def makeWindow(self):
         self.root = Tkinter.Tk()
 
         w = Tkinter.Label(self.root, text='hello!')
@@ -9,9 +10,20 @@ class MainWindow:
 
         self.root.mainloop()
 
+        return True
+    
+    
+
+
+
+class MainWindowTests(unittest.TestCase):
+    def testMakeWindow(self):
+        mw = MainWindow()
+        self.failUnless(mw.makeWindow())
+    
 
 def main():
-    x = MainWindow()
+    unittest.main()
 
         
 if __name__ == '__main__':
