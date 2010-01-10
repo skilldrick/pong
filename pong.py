@@ -1,10 +1,14 @@
 from tkinter import *
 from tkinter import ttk
+import time
 
 BOARD_WIDTH = 100
 BOARD_HEIGHT = 100
 
 class Game:
+    framerate = 30
+    framelength = 1 / framerate
+    
     def __init__(self):
         self.root = Tk()
         self.scoreFrame = ttk.Frame(self.root,
@@ -22,7 +26,9 @@ class Game:
 
         self.registerEvents()
 
-        self.root.mainloop()
+        #self.root.mainloop()
+        self.root.update()
+        self.gameLoop()
 
     def registerEvents(self):
         self.root.bind('<Key>', self.keyEvent)
@@ -32,6 +38,23 @@ class Game:
             self.board.ball.moveUp()
         elif event.keysym == 'Down':
             self.board.ball.moveDown()
+
+    def gameLoop(self):
+        try:
+            exit = False
+            while not exit:
+                start_time = time.clock()
+                
+                self.root.update_idletasks()
+                self.root.update()
+                interval = time.clock() - start_time
+                pause = self.framelength - interval
+                if pause > 0:
+                    time.sleep(pause)
+        except TclError:
+            pass
+            
+            
 
 
 
@@ -70,24 +93,8 @@ class Ball:
 
 
 
-
-
 def main():
     game = Game()
-"""    
-    def registerEvents(root):
-        root.bind('<Key>', move)
-
-    def move(event):
-        if event.keysym == 'Up':
-            board.ball.moveUp()
-        elif event.keysym == 'Down':
-            print('Down')     
-    registerEvents(root)
-    """
-
-
-    
     
         
 if __name__ == '__main__':
