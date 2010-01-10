@@ -26,10 +26,8 @@ class Game:
         self.scoreFrame.grid()
 
         self.buildBoard()
-        self.buildBall()
-        self.paddleL = PaddleL(self.board)
-        self.items.update(ball=self.ball)
-        self.items.update(paddleL = self.paddleL)
+        self.items.update(ball=Ball(self.board))
+        self.items.update(paddleL = PaddleL(self.board))
         self.items.update(paddleR = PaddleR(self.board))
 
         self.registerEvents()
@@ -45,18 +43,14 @@ class Game:
                             height=BOARD_HEIGHT)
         self.board.grid()
 
-    def buildBall(self):
-        self.ball = Ball(self.board)
-        
-
     def registerEvents(self):
         self.root.bind('<Key>', self.keyEvent)
 
     def keyEvent(self, event):
         if event.keysym == 'Up':
-            self.ball.moveUp()
+            self.items['paddleR'].moveUp()
         elif event.keysym == 'Down':
-            self.ball.moveDown()
+            self.items['paddleR'].moveDown()
 
     def gameLoop(self):
         try:
@@ -74,10 +68,20 @@ class Game:
             pass
             
 
-class Paddle:
+class MovingObject:
+    def move(self, x, y):
+        x1, y1, x2, y2 = self.board.coords(self.id)
+        x1 += x
+        x2 += x
+        y1 += y
+        y2 += y
+        self.board.coords(self.id, (x1, y1, x2, y2))
+
+        
+class Paddle(MovingObject):
     def __init__(self, board, originX):
         self.board = board
-        width = 7
+        width = 5
         height = 40
         originY = 50
         self.id = self.board.create_rectangle(
@@ -85,32 +89,34 @@ class Paddle:
              originX + width, originY + height),
             fill='black')
 
-class PaddleL:
+    def moveUp(self):
+        self.move(0, -1)
+
+    def moveDown(self):
+        self.move(0, 1)
+    
+
+class PaddleL(Paddle):
     def __init__(self, board):
         Paddle.__init__(self, board, 10)
 
-class PaddleR:
+class PaddleR(Paddle):
     def __init__(self, board):
         Paddle.__init__(self, board, 90)
 
-class Ball:
+class Ball(MovingObject):
     def __init__(self, board):
         self.board = board
+        width = 5
+        height = 5
+        originX = 40
+        originY = 40
         self.id = self.board.create_rectangle(
-            (10, 10, 20, 20),
+            (originX, originY,
+             originX + width, originY + height),
             fill='black')
 
-    def moveUp(self):
-        self.move(-1)
-
-    def moveDown(self):
-        self.move(1)
         
-    def move(self, amount):
-        x1, y1, x2, y2 = self.board.coords(self.id)
-        y1 += amount
-        y2 += amount
-        self.board.coords(self.id, (x1, y1, x2, y2))
 
 
 
