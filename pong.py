@@ -45,19 +45,31 @@ class Game:
 
     def registerEvents(self):
         self.root.bind('<Key>', self.keyEvent)
+        self.root.bind('<KeyRelease>', self.keyUpEvent)
 
     def keyEvent(self, event):
         if event.keysym == 'Up':
-            self.items['paddleR'].moveUp()
+            self.items['paddleR'].startUp()
         elif event.keysym == 'Down':
-            self.items['paddleR'].moveDown()
+            self.items['paddleR'].startDown()
+
+    def keyUpEvent(self, event):
+        self.items['paddleR'].stop()
+        if event.keysym == 'Up':
+            pass
+            #self.items['paddleR'].stop()
+        elif event.keysym == 'Down':
+            pass
+            #self.items['paddleR'].stop()
+            
 
     def gameLoop(self):
         try:
             exit = False
             while not exit:
                 start_time = time.clock()
-                
+                for item in self.items.values():
+                    item.update()
                 self.root.update_idletasks()
                 self.root.update()
                 interval = time.clock() - start_time
@@ -69,6 +81,22 @@ class Game:
             
 
 class MovingObject:
+    xvel = 0
+    yvel = 0
+
+    def startUp(self):
+        self.yvel = -1
+
+    def startDown(self):
+        self.yvel = 1
+
+    def stop(self):
+        self.xvel = 0
+        self.yvel = 0
+    
+    def update(self):
+        self.move(self.xvel, self.yvel)
+    
     def move(self, x, y):
         x1, y1, x2, y2 = self.board.coords(self.id)
         x1 += x
