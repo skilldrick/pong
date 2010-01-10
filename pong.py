@@ -8,36 +8,55 @@ BOARD_HEIGHT = 100
 class Game:
     framerate = 30
     framelength = 1 / framerate
+    items = {}
     
     def __init__(self):
         self.root = Tk()
-        self.scoreFrame = ttk.Frame(self.root,
-                                    borderwidth=3,
-                                    relief='sunken',
-                                    width=BOARD_WIDTH, height=50)
-        self.scoreFrame.grid()
-
+        
         self.gameFrame = ttk.Frame(self.root,
                               borderwidth=3,
                               relief='sunken')
         self.gameFrame.grid()
 
-        self.board = Board(self.gameFrame)
+        self.scoreFrame = ttk.Frame(self.gameFrame,
+                                    borderwidth=3,
+                                    relief='sunken',
+                                    width=BOARD_WIDTH,
+                                    height=50)
+        self.scoreFrame.grid()
+
+        self.buildBoard()
+        self.buildBall()
+        self.paddleL = PaddleL(self.board)
+        self.items.update(ball=self.ball)
+        self.items.update(paddleL = self.paddleL)
+        self.items.update(paddleR = PaddleR(self.board))
 
         self.registerEvents()
 
-        #self.root.mainloop()
-        self.root.update()
+        #self.root.update()
         self.gameLoop()
+
+    def buildBoard(self):
+        self.board = Canvas(self.gameFrame,
+                            borderwidth=3,
+                            relief='sunken',
+                            width=BOARD_WIDTH,
+                            height=BOARD_HEIGHT)
+        self.board.grid()
+
+    def buildBall(self):
+        self.ball = Ball(self.board)
+        
 
     def registerEvents(self):
         self.root.bind('<Key>', self.keyEvent)
 
     def keyEvent(self, event):
         if event.keysym == 'Up':
-            self.board.ball.moveUp()
+            self.ball.moveUp()
         elif event.keysym == 'Down':
-            self.board.ball.moveDown()
+            self.ball.moveDown()
 
     def gameLoop(self):
         try:
@@ -54,30 +73,32 @@ class Game:
         except TclError:
             pass
             
-            
-
-
-
-class Board:
-    def __init__(self, parent):
-        self.canvas = Canvas(parent,
-                             width=BOARD_WIDTH,
-                             height=BOARD_HEIGHT)
-        self.canvas.grid()
-        self.ball = Ball(self.canvas)
-
-
 
 class Paddle:
-    def __init__(self):
-        pass
+    def __init__(self, board, originX):
+        self.board = board
+        width = 7
+        height = 40
+        originY = 50
+        self.id = self.board.create_rectangle(
+            (originX, originY,
+             originX + width, originY + height),
+            fill='black')
 
+class PaddleL:
+    def __init__(self, board):
+        Paddle.__init__(self, board, 10)
+
+class PaddleR:
+    def __init__(self, board):
+        Paddle.__init__(self, board, 90)
 
 class Ball:
-    def __init__(self, canvas):
-        self.canvas = canvas
-        self.id = self.canvas.create_rectangle((10, 10, 20, 20),
-                                                 fill='black')
+    def __init__(self, board):
+        self.board = board
+        self.id = self.board.create_rectangle(
+            (10, 10, 20, 20),
+            fill='black')
 
     def moveUp(self):
         self.move(-1)
@@ -86,10 +107,10 @@ class Ball:
         self.move(1)
         
     def move(self, amount):
-        x1, y1, x2, y2 = self.canvas.coords(self.id)
+        x1, y1, x2, y2 = self.board.coords(self.id)
         y1 += amount
         y2 += amount
-        self.canvas.coords(self.id, (x1, y1, x2, y2))
+        self.board.coords(self.id, (x1, y1, x2, y2))
 
 
 
