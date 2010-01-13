@@ -27,6 +27,9 @@ class Game:
         self.items.update(ball=Ball(self.board))
         self.items.update(paddleL = PaddleL(self.board))
         self.items.update(paddleR = PaddleR(self.board))
+        self.detector = Detector(self.items['ball'],
+                                 self.items['paddleL'],
+                                 self.items['paddleR'])
         self.registerEvents()
         #self.root.update()
         self.gameLoop()
@@ -64,7 +67,8 @@ class Game:
                 start_time = time.clock()
                 self.items['ball'].calcVelocity()
                 for item in self.items.values():
-                    item.update()
+                    item.move()
+                self.items['ball'].checkCollision()
                 self.root.update_idletasks()
                 self.root.update()
                 interval = time.clock() - start_time
@@ -88,9 +92,7 @@ class MovingObject:
     def stop(self):
         self.xvel = 0
         self.yvel = 0
-    
-    def update(self):
-        self.move()
+        self.velocity = 0
     
     def move(self):
         x1, y1, x2, y2 = self.board.coords(self.id)
@@ -119,10 +121,12 @@ class PaddleL(Paddle):
     def __init__(self, board):
         Paddle.__init__(self, board, 10)
 
+        
 class PaddleR(Paddle):
     def __init__(self, board):
         Paddle.__init__(self, board, 90)
 
+        
 class Ball(MovingObject):
     velocity = 0.5
     angle = math.pi / 4
@@ -132,26 +136,36 @@ class Ball(MovingObject):
         width = 5
         height = 5
         originX = 40
-        originY = 40
+        originY = 10
         self.id = self.board.create_rectangle(
             (originX, originY,
              originX + width, originY + height),
             fill='black')
 
     def calcVelocity(self):
-        adj = math.cos(self.angle) * self.velocity #cos(theta) = adj/hyp
-        opp = math.sin(self.angle) * self.velocity #sin(theta) = opp/hyp
+        adj = math.cos(self.angle) * self.velocity
+        opp = math.sin(self.angle) * self.velocity
         self.xvel = adj
         self.yvel = opp
 
     def rotate(self):
         self.angle += math.pi / 4
+
+    def checkCollision(self):
+        x1, y1, x2, y2 = self.board.coords(self.id)
+        if x2 > 80 or y2 > 80:
+            self.stop()
+
+
+class Detector:
+    def __init__(self, ball, paddleL, paddleR):
+        self.ball = ball
+        self.paddleL = paddleL
+        self.paddleR = paddleR
+    
+    
         
     
-
-        
-
-
 
 def main():
     game = Game()
