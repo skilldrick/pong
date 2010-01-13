@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import ttk
 import time
 import math
+import sys
+import unittest
 
 BOARD_WIDTH = 100
 BOARD_HEIGHT = 100
@@ -27,9 +29,7 @@ class Game:
         self.items.update(ball=Ball(self.board))
         self.items.update(paddleL = PaddleL(self.board))
         self.items.update(paddleR = PaddleR(self.board))
-        self.detector = Detector(self.items['ball'],
-                                 self.items['paddleL'],
-                                 self.items['paddleR'])
+        self.detector = Detector(self.items)
         self.registerEvents()
         #self.root.update()
         self.gameLoop()
@@ -158,17 +158,38 @@ class Ball(MovingObject):
 
 
 class Detector:
-    def __init__(self, ball, paddleL, paddleR):
-        self.ball = ball
-        self.paddleL = paddleL
-        self.paddleR = paddleR
-    
-    
+    def __init__(self, items):
+        self.items = items
         
-    
+    def checkCollision(self):
+        pass
+                
+
+class DetectorTests(unittest.TestCase):
+    def setUp(self):
+        """
+        self.ball = Ball()
+        self.paddleL = PaddleL()
+        self.paddleR = PaddleR()
+        self.items = {}
+        self.items.update(ball=Ball(self.board))
+        self.items.update(paddleL = PaddleL(self.board))
+        self.items.update(paddleR = PaddleR(self.board))
+        """
+        #Going to have to be smart here - maybe refactor so everything is more easily testable
+    def testBallCollidesWithWall(self):
+        pass
 
 def main():
-    game = Game()
+    try:
+        arg = sys.argv[1]
+    except IndexError:
+        arg = ''
+
+    if arg == 'test':
+        print('This is a test')
+    else:
+        game = Game()
     
         
 if __name__ == '__main__':
