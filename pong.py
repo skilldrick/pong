@@ -3,6 +3,7 @@ import unittest
 
 import detector
 import gui
+import moving
 
 
                 
@@ -32,7 +33,10 @@ def main():
     if arg == 'test':
         print('This is a test')
     else:
-        game = gui.Game()
+        game = gui.Gui()
+        game.addItem('ball', moving.Ball)
+        game.addItem('paddleL', moving.PaddleL)
+        game.addItem('paddleR', moving.PaddleR)
         game.gameLoop()
         
     
