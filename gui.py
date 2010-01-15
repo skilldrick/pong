@@ -22,7 +22,7 @@ class Gui:
         self.scoreFrame = ttk.Frame(self.gameFrame,
                                     borderwidth=3,
                                     relief='sunken',
-                                    width=BOARD_WIDTH,
+                                    width=BOARD_WIDTH + 6,
                                     height=50)
         self.scoreFrame.grid()
         self.buildBoard()
@@ -86,8 +86,7 @@ class VisibleObject:
         self.board = board
         self.id = self.board.create_rectangle(self.coords,
                                               fill='black')
-    
-        
+
     def move(self):
         self.movingObject.move()
         self.coords = self.movingObject.getCoords()
@@ -102,4 +101,3 @@ class VisibleObject:
     def stop(self):
         self.movingObject.stop()
 
-    

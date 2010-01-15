@@ -27,7 +27,6 @@ class MovingObject:
                      y1 + self.yvel,
                      x2 + self.xvel,
                      y2 + self.yvel)
-        #self.board.coords(self.id, newcoords)
         self.coords = newCoords
 
         
@@ -85,8 +84,3 @@ class Ball(MovingObject):
         
     def rotate(self):
         self.angle += math.pi / 4
-
-    def checkCollision(self):
-        x1, y1, x2, y2 = self.board.coords(self.id)
-        if x2 > 80 or y2 > 80:
-            self.stop()

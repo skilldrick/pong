@@ -1,9 +1,14 @@
 import sys
 import unittest
+import optparse
 
 import detector
 import gui
 import moving
+
+
+parser = optparse.OptionParser()
+parser.add_option("-t", "--test", action="store_true")
 
 
                 
@@ -25,21 +30,20 @@ class DetectorTests(unittest.TestCase):
 
     
 def main():
-    try:
-        arg = sys.argv[1]
-    except IndexError:
-        arg = ''
+    game = gui.Gui()
+    game.addItem('ball', moving.Ball())
+    game.addItem('paddleL', moving.PaddleL())
+    game.addItem('paddleR', moving.PaddleR())
+    game.gameLoop()
 
-    if arg == 'test':
-        print('This is a test')
-    else:
-        game = gui.Gui()
-        game.addItem('ball', moving.Ball())
-        game.addItem('paddleL', moving.PaddleL())
-        game.addItem('paddleR', moving.PaddleR())
-        game.gameLoop()
+def test():
+    print('this is a test')
         
     
         
 if __name__ == '__main__':
-    main()
+    options, args = parser.parse_args()
+    if options.test:
+        test()
+    else:
+        main()
