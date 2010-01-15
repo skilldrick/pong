@@ -34,9 +34,9 @@ def main():
         print('This is a test')
     else:
         game = gui.Gui()
-        game.addItem('ball', moving.Ball)
-        game.addItem('paddleL', moving.PaddleL)
-        game.addItem('paddleR', moving.PaddleR)
+        game.addItem('ball', moving.Ball())
+        game.addItem('paddleL', moving.PaddleL())
+        game.addItem('paddleR', moving.PaddleR())
         game.gameLoop()
         
     

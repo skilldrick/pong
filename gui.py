@@ -30,10 +30,8 @@ class Gui:
         self.registerEvents()
 
     def addItem(self, itemName, item):
-        #item should be constructed in moving
-        #Gui.items should just contain the canvas ids?
-        #Every frame, get coords from item and apply to canvas item
-        newItem = {itemName: item(self.board)}
+        newItem = {itemName:
+                       VisibleObject(self.board, item)}
         self.items.update(newItem)
 
     def buildBoard(self):
@@ -79,5 +77,29 @@ class Gui:
                     time.sleep(pause)
         except TclError:
             pass
-            
 
+
+class VisibleObject:
+    def __init__(self, board, item):
+        self.movingObject = item
+        self.coords = self.movingObject.getCoords()
+        self.board = board
+        self.id = self.board.create_rectangle(self.coords,
+                                              fill='black')
+    
+        
+    def move(self):
+        self.movingObject.move()
+        self.coords = self.movingObject.getCoords()
+        self.board.coords(self.id, self.coords)
+
+    def startUp(self):
+        self.movingObject.startUp()
+    
+    def startDown(self):
+        self.movingObject.startDown()
+
+    def stop(self):
+        self.movingObject.stop()
+
+    
