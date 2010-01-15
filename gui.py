@@ -30,6 +30,9 @@ class Gui:
         self.registerEvents()
 
     def addItem(self, itemName, item):
+        #item should be constructed in moving
+        #Gui.items should just contain the canvas ids?
+        #Every frame, get coords from item and apply to canvas item
         newItem = {itemName: item(self.board)}
         self.items.update(newItem)
 
