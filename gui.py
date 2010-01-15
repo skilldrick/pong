@@ -2,15 +2,11 @@ from tkinter import *
 from tkinter import ttk
 import time
 
-#these two imports will be injected
-import detector
+import config
 
-BOARD_WIDTH = 100
-BOARD_HEIGHT = 100
 
 class Gui:
-    framerate = 30
-    framelength = 1 / framerate
+    framelength = 1 / config.framerate
     items = {}
     
     def __init__(self):
@@ -22,11 +18,10 @@ class Gui:
         self.scoreFrame = ttk.Frame(self.gameFrame,
                                     borderwidth=3,
                                     relief='sunken',
-                                    width=BOARD_WIDTH + 6,
+                                    width=config.BOARD_WIDTH + 6,
                                     height=50)
         self.scoreFrame.grid()
         self.buildBoard()
-        self.detector = detector.Detector(self.items)
         self.registerEvents()
 
     def addItem(self, itemName, item):
@@ -34,12 +29,16 @@ class Gui:
                        VisibleObject(self.board, item)}
         self.items.update(newItem)
 
+    def addDetector(self, detector):
+        self.detector = detector
+        self.detector.addItems(self.items)
+
     def buildBoard(self):
         self.board = Canvas(self.gameFrame,
                             borderwidth=3,
                             relief='sunken',
-                            width=BOARD_WIDTH,
-                            height=BOARD_HEIGHT)
+                            width=config.BOARD_WIDTH,
+                            height=config.BOARD_HEIGHT)
         self.board.grid()
 
     def registerEvents(self):

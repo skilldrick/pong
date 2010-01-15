@@ -1,0 +1,5 @@
+framerate = 30
+BOARD_WIDTH = 100
+BOARD_HEIGHT = 100
+
+
