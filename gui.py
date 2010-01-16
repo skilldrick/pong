@@ -66,8 +66,8 @@ class Gui:
                 start_time = time.clock()
                 for item in self.items.values():
                     item.move()
-                for item in self.items.values():
-                    pass #detect collisions
+                #for item in self.items.values():
+                self.detector.checkCollision()
                 self.root.update_idletasks()
                 self.root.update()
                 interval = time.clock() - start_time
