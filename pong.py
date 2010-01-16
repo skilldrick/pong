@@ -2,10 +2,7 @@ import sys
 import optparse
 import unittest
 
-import detector
-import gui
-import moving
-
+from game import GameMaker
 
 parser = optparse.OptionParser()
 parser.add_option("-t", "--test", action="store_true")
@@ -13,13 +10,18 @@ parser.add_option("-t", "--test", action="store_true")
 
     
 def main():
+    gameMaker = GameMaker()
+    game = gameMaker()
+    game.start()
+    
+    """
     game = gui.Gui()
     game.addItem('ball', moving.Ball())
     game.addItem('paddleL', moving.PaddleL())
     game.addItem('paddleR', moving.PaddleR())
     game.addDetector(detector.Detector())
     game.gameLoop()
-
+    """
 
 
 def test():

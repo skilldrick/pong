@@ -1,12 +1,11 @@
 from tkinter import *
 from tkinter import ttk
-import time
+
 
 import config
 
 
 class Gui:
-    framelength = 1 / config.framerate
     items = {}
     
     def __init__(self):
@@ -24,14 +23,10 @@ class Gui:
         self.buildBoard()
         self.registerEvents()
 
-    def addItem(self, itemName, item):
-        newItem = {itemName:
-                       VisibleObject(self.board, item)}
+    def addItem(self, name, coords):
+        newItem = {name:
+                       VisibleObject(self.board, coords)}
         self.items.update(newItem)
-
-    def addDetector(self, detector):
-        self.detector = detector
-        self.detector.addItems(self.items)
 
     def buildBoard(self):
         self.board = Canvas(self.gameFrame,
@@ -59,36 +54,27 @@ class Gui:
         elif event.keysym == 'Down':
             self.items['paddleR'].stop()
 
-    def gameLoop(self):
+    def move(self, name, coords):
         try:
-            exit = False
-            while not exit:
-                start_time = time.clock()
-                for item in self.items.values():
-                    item.move()
-                #for item in self.items.values():
-                self.detector.checkCollision()
-                self.root.update_idletasks()
-                self.root.update()
-                interval = time.clock() - start_time
-                pause = self.framelength - interval
-                if pause > 0:
-                    time.sleep(pause)
-        except TclError:
-            pass
+            self.items[name].move(coords)
+        except KeyError:
+            self.addItem(name, coords)
+    
+    def process(self):
+        self.root.update_idletasks()
+        self.root.update()
+            
 
 
 class VisibleObject:
-    def __init__(self, board, item):
-        self.movingObject = item
-        self.coords = self.movingObject.getCoords()
+    def __init__(self, board, coords, colour='black'):
+        self.coords = coords
         self.board = board
         self.id = self.board.create_rectangle(self.coords,
-                                              fill='black')
+                                              fill=colour)
 
-    def move(self):
-        self.movingObject.move()
-        self.coords = self.movingObject.getCoords()
+    def move(self, coords):
+        self.coords = coords
         self.board.coords(self.id, self.coords)
 
     def startUp(self):
