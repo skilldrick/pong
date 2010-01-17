@@ -8,8 +8,8 @@ import config
 class Gui:
     items = {}
     
-    def __init__(self):
-        self.root = Tk()
+    def __init__(self, root):
+        self.root = root
         self.gameFrame = ttk.Frame(self.root,
                               borderwidth=3,
                               relief='sunken')
@@ -21,7 +21,6 @@ class Gui:
                                     height=50)
         self.scoreFrame.grid()
         self.buildBoard()
-        self.registerEvents()
 
     def addItem(self, name, coords):
         newItem = {name: VisibleObject(self.board, coords)}
@@ -34,24 +33,6 @@ class Gui:
                             width=config.BOARD_WIDTH,
                             height=config.BOARD_HEIGHT)
         self.board.grid()
-
-    def registerEvents(self):
-        self.root.bind('<Key>', self.keyEvent)
-        self.root.bind('<KeyRelease>', self.keyUpEvent)
-
-    def keyEvent(self, event):
-        if event.keysym == 'Up':
-            self.items['paddleR'].startUp()
-        elif event.keysym == 'Down':
-            self.items['paddleR'].startDown()
-        elif event.keysym == 'Right':
-            self.items['ball'].rotate()
-
-    def keyUpEvent(self, event):
-        if event.keysym == 'Up':
-            self.items['paddleR'].stop()
-        elif event.keysym == 'Down':
-            self.items['paddleR'].stop()
 
     def move(self, name, coords):
         try:
@@ -75,13 +56,3 @@ class VisibleObject:
     def move(self, coords):
         self.coords = coords
         self.board.coords(self.id, self.coords)
-
-    def startUp(self):
-        self.movingObject.startUp()
-    
-    def startDown(self):
-        self.movingObject.startDown()
-
-    def stop(self):
-        self.movingObject.stop()
-

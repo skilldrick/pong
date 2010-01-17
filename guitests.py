@@ -1,4 +1,5 @@
 import unittest
+from tkinter import *
 
 from gui import Gui
 import config
@@ -6,17 +7,18 @@ import moving
 
 class GuiTests(unittest.TestCase):
     def setUp(self):
-        self.gui = Gui()
+        self.root = Tk()
+        self.gui = Gui(self.root)
         ball = moving.Ball()
         paddleL = moving.PaddleL()
         paddleR = moving.PaddleR()
-        items = {
+        self.items = {
             'ball': ball,
             'paddleL': paddleL,
             'paddleR': paddleR,
             }
-        for name, item in items.items():
-            self.gui.addItem(name, item.coords)
+        for name, item in self.items.items():
+            self.gui.addItem(name, item.getCoords())
 
     def testGuiHasBoard(self):
         self.gui.board
@@ -28,11 +30,24 @@ class GuiTests(unittest.TestCase):
                          config.BOARD_HEIGHT)
 
     def testGuiHasItems(self):
-        self.assertTrue('ball' in self.gui.items)
-        self.assertTrue('paddleL' in self.gui.items)
-        self.assertTrue('paddleR' in self.gui.items)
+        for name in self.items:
+            self.assertTrue(name in self.gui.items)
 
-    
+    def testMoveMakesNewItem(self):
+        testitem = 'testitem'
+        self.gui.move(testitem, (20, 20, 30, 30))
+        self.assertTrue(self.gui.items[testitem])
+
+    def testMoveMoves(self):
+        self.gui.move('ball',
+                      self.items['ball'].getCoords())
+        start = self.gui.items['ball'].coords
+        self.items['ball'].move()
+        self.gui.move('ball',
+                      self.items['ball'].getCoords())
+        end = self.gui.items['ball'].coords
+        self.assertNotEqual(start, end)
+        
         
                         
 
