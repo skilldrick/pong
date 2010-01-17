@@ -24,8 +24,7 @@ class Gui:
         self.registerEvents()
 
     def addItem(self, name, coords):
-        newItem = {name:
-                       VisibleObject(self.board, coords)}
+        newItem = {name: VisibleObject(self.board, coords)}
         self.items.update(newItem)
 
     def buildBoard(self):

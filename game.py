@@ -37,6 +37,12 @@ class Game:
     def start(self):
         self.gameLoop()
 
+    def checkCollisions(self):
+        coords = [item.coords for 
+                  item in 
+                  self.items.values()]
+        self.detector.checkBounds(coords)
+
     def gameLoop(self):
         exit = False
         try:
@@ -44,6 +50,7 @@ class Game:
                 start_time = time.clock()
                 for name, item in self.items.items():
                     item.move()
+                    self.checkCollisions()
                     #need to check for collision first
                     #then resolve collision
                     #then update gui.

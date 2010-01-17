@@ -3,6 +3,8 @@ import optparse
 import unittest
 
 from game import GameMaker
+import guitests
+import detector
 
 parser = optparse.OptionParser()
 parser.add_option("-t", "--test", action="store_true")
@@ -13,23 +15,23 @@ def main():
     gameMaker = GameMaker()
     game = gameMaker()
     game.start()
-    
-    """
-    game = gui.Gui()
-    game.addItem('ball', moving.Ball())
-    game.addItem('paddleL', moving.PaddleL())
-    game.addItem('paddleR', moving.PaddleR())
-    game.addDetector(detector.Detector())
-    game.gameLoop()
-    """
 
 
 def test():
-    detectorTests = detector.DetectorTests
-    suite = unittest.makeSuite(detectorTests, 'test')
+    loader = unittest.TestLoader()
+    detectorTests = loader.loadTestsFromTestCase(
+        detector.DetectorTests)
+    guiTests = loader.loadTestsFromTestCase(
+        guitests.GuiTests)
+    visibleObjectTests = loader.loadTestsFromTestCase(
+        guitests.VisibleObjectTests)
+
+    allTests = unittest.TestSuite([detectorTests,
+                                   guiTests,
+                                   visibleObjectTests])
 
     runner = unittest.TextTestRunner()
-    runner.run(suite)
+    runner.run(allTests)
     
         
 if __name__ == '__main__':
