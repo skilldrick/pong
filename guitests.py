@@ -47,16 +47,12 @@ class GuiTests(unittest.TestCase):
                       self.items['ball'].getCoords())
         end = self.gui.items['ball'].coords
         self.assertNotEqual(start, end)
-        
-        
-                        
 
-    
-        
-    
-
-
-class VisibleObjectTests(unittest.TestCase):
-    def testFail(self):
-        self.assertTrue(True)
-        
+    def testNoMove(self):
+        self.gui.move('ball',
+                      self.items['ball'].getCoords())
+        start = self.gui.items['ball'].coords
+        self.gui.move('ball',
+                      self.items['ball'].getCoords())
+        end = self.gui.items['ball'].coords
+        self.assertEqual(start, end)

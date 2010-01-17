@@ -4,6 +4,7 @@ import unittest
 
 from game import GameMaker
 import guitests
+import movingtests
 import detector
 
 parser = optparse.OptionParser()
@@ -23,12 +24,13 @@ def test():
         detector.DetectorTests)
     guiTests = loader.loadTestsFromTestCase(
         guitests.GuiTests)
-    visibleObjectTests = loader.loadTestsFromTestCase(
-        guitests.VisibleObjectTests)
+    movingTests = loader.loadTestsFromTestCase(
+        movingtests.MovingTests)
 
     allTests = unittest.TestSuite([detectorTests,
                                    guiTests,
-                                   visibleObjectTests])
+                                   movingTests
+                                   ])
 
     runner = unittest.TextTestRunner()
     runner.run(allTests)

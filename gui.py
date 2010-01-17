@@ -43,7 +43,6 @@ class Gui:
     def process(self):
         self.root.update_idletasks()
         self.root.update()
-            
 
 
 class VisibleObject:
