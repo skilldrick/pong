@@ -33,7 +33,11 @@ def test():
                                    ])
 
     runner = unittest.TextTestRunner()
-    runner.run(allTests)
+    result = runner.run(allTests)
+    if not result.wasSuccessful():
+        sys.exit(1)
+    
+        
     
         
 if __name__ == '__main__':
