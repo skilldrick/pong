@@ -12,8 +12,16 @@ class Detector:
         maxY = minY + config.BOARD_HEIGHT
         self.bounds = (minX, minY, maxX, maxY)
 
-    def checkCollision(self):
-        pass
+    def checkCollision(self, coordsA, coordsB):
+        if coordsA[0] >= coordsB[2]:
+            return False
+        if coordsA[2] <= coordsB[0]:
+            return False
+        if coordsA[1] >= coordsB[3]:
+            return False
+        if coordsA[3] <= coordsB[1]:
+            return False
+        return True
 
     def checkBounds(self, coords):
         results = []
@@ -58,11 +66,22 @@ class DetectorTests(unittest.TestCase):
             (-1000, -1000, -990, -990),
             (1000, 1000, 1010, 1010),
             (self.maxX - 9, self.maxY - 9,
-             self.maxX + 1, self.maxY + 1))
+             self.maxX + 1, self.maxY + 1)
+            )
         results = self.detector.checkBounds(outCoords)
         for result in results:
             self.assertTrue(result)
-            
+
+    def testObjectsCollide(self):
+        object1 = (10, 10, 20, 20)
+        object2 = (19, 19, 29, 29)
+        self.assertTrue(self.detector.checkCollision(object1, object2))
+
+    def testObjectsDontCollide(self):
+        object1 = (10, 10, 20, 20)
+        object2 = (21, 10, 31, 20)
+        self.assertFalse(self.detector.checkCollision(object1, object2))
+
 
 if __name__ == '__main__':
     unittest.main()

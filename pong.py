@@ -42,6 +42,7 @@ def test():
         
 if __name__ == '__main__':
     options, args = parser.parse_args()
+    #this is needed for the unit tests to not get confused:
     del sys.argv[1:]
     if options.test:
         test()
