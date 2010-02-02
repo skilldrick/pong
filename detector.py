@@ -24,20 +24,16 @@ class Detector:
         return True
 
     def checkBounds(self, coords):
-        self.results = []
-        for coord in coords:
-            if coord[0] < self.bounds[0]:
-                self.results.append('left')
-            elif coord[1] < self.bounds[1]:
-                self.results.append('top')
-            elif coord[2] > self.bounds[2]:
-                self.results.append('right')
-            elif coord[3] > self.bounds[3]:
-                self.results.append('bottom')
-            else:
-                self.results.append(False)
-        return self.results
-            
+        if coords[0] < self.bounds[0]:
+            return 'left'
+        elif coords[1] < self.bounds[1]:
+            return 'top'
+        elif coords[2] > self.bounds[2]:
+            return 'right'
+        elif coords[3] > self.bounds[3]:
+            return 'bottom'
+        else:
+            return False
 
 class DetectorTests(unittest.TestCase):
     def setUp(self):
@@ -55,9 +51,8 @@ class DetectorTests(unittest.TestCase):
              self.maxX, self.maxY),
             (self.maxX - 10, 0, self.maxX, 10),
             (0, self.maxY - 10, 10, self.maxY))
-        results = self.detector.checkBounds(inCoords)
-        for result in results:
-            self.assertFalse(result)
+        for coords in inCoords:
+            self.assertFalse(self.detector.checkBounds(coords))
     
     def testBallCollidesWithWall(self):
         outCoords = (
@@ -68,9 +63,8 @@ class DetectorTests(unittest.TestCase):
             (self.maxX - 9, self.maxY - 9,
              self.maxX + 1, self.maxY + 1)
             )
-        results = self.detector.checkBounds(outCoords)
-        for result in results:
-            self.assertTrue(result)
+        for coords in outCoords:
+            self.assertTrue(self.detector.checkBounds(coords))
 
     def testObjectsCollide(self):
         objects = (
