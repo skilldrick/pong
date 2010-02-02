@@ -44,7 +44,9 @@ class Game:
         coords = [item.getCoords() for 
                   item in 
                   self.items.values()]
-        self.detector.checkBounds(coords)
+        for coord in coords:
+            self.detector.checkBounds(coord)
+
 
     def gameLoop(self):
         exit = False
@@ -60,7 +62,6 @@ class Game:
                 for name, item in self.items.items():
                     self.gui.move(name, item.getCoords())
                 self.gui.process()
-                #for item in self.items.values():
                 interval = time.clock() - start_time
                 pause = self.framelength - interval
                 if pause > 0:

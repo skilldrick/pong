@@ -24,19 +24,19 @@ class Detector:
         return True
 
     def checkBounds(self, coords):
-        results = []
+        self.results = []
         for coord in coords:
             if coord[0] < self.bounds[0]:
-                results.append('left')
+                self.results.append('left')
             elif coord[1] < self.bounds[1]:
-                results.append('top')
+                self.results.append('top')
             elif coord[2] > self.bounds[2]:
-                results.append('right')
+                self.results.append('right')
             elif coord[3] > self.bounds[3]:
-                results.append('bottom')
+                self.results.append('bottom')
             else:
-                results.append(False)
-        return results
+                self.results.append(False)
+        return self.results
             
 
 class DetectorTests(unittest.TestCase):
@@ -73,14 +73,21 @@ class DetectorTests(unittest.TestCase):
             self.assertTrue(result)
 
     def testObjectsCollide(self):
-        object1 = (10, 10, 20, 20)
-        object2 = (19, 19, 29, 29)
-        self.assertTrue(self.detector.checkCollision(object1, object2))
+        objects = (
+            ((10, 10, 20, 20), (19, 19, 29, 29)),
+            ((100, 100, 110, 110), (90, 90, 101, 110)),
+            ((10, 10, 1000, 1000), (50, 50, 60, 60))
+            )
+        for object in objects:
+            self.assertTrue(self.detector.checkCollision(object[0], object[1]))
 
     def testObjectsDontCollide(self):
-        object1 = (10, 10, 20, 20)
-        object2 = (21, 10, 31, 20)
-        self.assertFalse(self.detector.checkCollision(object1, object2))
+        objects = (
+            ((10, 10, 20, 20), (21, 10, 31, 20)),
+            ((50, 100, 60, 200), (100, 100, 110, 200))
+            )
+        for object in objects:
+            self.assertFalse(self.detector.checkCollision(object[0], object[1]))
 
 
 if __name__ == '__main__':
