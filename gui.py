@@ -11,11 +11,11 @@ class Gui:
     def __init__(self, root):
         self.root = root
         self.gameFrame = ttk.Frame(self.root,
-                              borderwidth=3,
+                              borderwidth=0,
                               relief='sunken')
         self.gameFrame.grid()
         self.scoreFrame = ttk.Frame(self.gameFrame,
-                                    borderwidth=3,
+                                    borderwidth=0,
                                     relief='sunken',
                                     width=config.BOARD_WIDTH + 6,
                                     height=50)
@@ -28,7 +28,7 @@ class Gui:
 
     def buildBoard(self):
         self.board = Canvas(self.gameFrame,
-                            borderwidth=3,
+                            borderwidth=1,
                             relief='sunken',
                             width=config.BOARD_WIDTH,
                             height=config.BOARD_HEIGHT)

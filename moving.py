@@ -21,13 +21,20 @@ class MovingObject:
     def getCoords(self):
         return self.coords
     
-    def move(self):
+    def move(self, backwards=False):
         x1, y1, x2, y2 = self.coords
-        newCoords = (x1 + self.xvel,
-                     y1 + self.yvel,
-                     x2 + self.xvel,
-                     y2 + self.yvel)
+        xvel, yvel = self.xvel, self.yvel
+        if backwards:
+            xvel = -xvel
+            yvel = -yvel
+        newCoords = (x1 + xvel,
+                     y1 + yvel,
+                     x2 + xvel,
+                     y2 + yvel)
         self.coords = newCoords
+
+    def bounce(self, side):
+        self.move(True)
 
         
 class Paddle(MovingObject):
@@ -55,8 +62,8 @@ class PaddleR(Paddle):
 
         
 class Ball(MovingObject):
-    velocity = 0.5
-    angle = math.pi / 4
+    velocity = math.sqrt(2)
+    angle = math.pi / 5
     
     def __init__(self):
         width = 5
@@ -75,12 +82,25 @@ class Ball(MovingObject):
         self.xvel = adj
         self.yvel = opp
 
-    def move(self):
+    def move(self, backwards=False):
         self.calcVelocity()
-        MovingObject.move(self)
+        MovingObject.move(self, backwards)
 
     def stop(self):
         self.velocity = 0
+
+    def normaliseAngle(self):
+        while self.angle > math.pi * 2:
+            self.angle -= math.pi * 2
+        while self.angle < -math.pi * 2:
+            self.angle += math.pi * 2
         
-    def rotate(self):
-        self.angle += math.pi / 4
+    def bounce(self, side):
+        print(side)
+        self.move(True)
+        if side == 'left' or side == 'right':
+            self.angle = math.pi - self.angle
+        else:
+            self.angle = -self.angle
+        self.normaliseAngle()
+

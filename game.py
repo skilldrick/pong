@@ -41,12 +41,11 @@ class Game:
         self.gameLoop()
 
     def checkCollisions(self):
-        coords = [item.getCoords() for 
-                  item in 
-                  self.items.values()]
-        for coord in coords:
-            self.detector.checkBounds(coord)
-
+        for item in self.items.values():
+            coord = item.getCoords()
+            result = self.detector.checkBounds(coord)
+            if result:
+                item.bounce(result)
 
     def gameLoop(self):
         exit = False
@@ -78,8 +77,6 @@ class Game:
             self.items['paddleR'].startUp()
         elif event.keysym == 'Down':
             self.items['paddleR'].startDown()
-        elif event.keysym == 'Right':
-            self.items['ball'].rotate()
 
     def keyUpEvent(self, event):
         if event.keysym == 'Up':
